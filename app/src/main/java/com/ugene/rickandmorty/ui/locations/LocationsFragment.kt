@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.ugene.rickandmorty.FragmentBase
 import com.ugene.rickandmorty.databinding.FragmentLocationsBinding
+import com.ugene.rickandmorty.ui.ListState
 import com.ugene.rickandmorty.ui.OnItemClickListener
+import com.ugene.rickandmorty.ui.setupPaging
 import dagger.android.support.AndroidSupportInjection
 
 class LocationsFragment : FragmentBase<FragmentLocationsBinding>() {
@@ -35,27 +37,21 @@ class LocationsFragment : FragmentBase<FragmentLocationsBinding>() {
 
         val viewAdapter = LocationsAdapter(object : OnItemClickListener<LocationsAdapter.Location> {
             override fun onItemClicked(item: LocationsAdapter.Location, position: Int, view: View) {
-
+                findNavController().navigate(
+                    LocationsFragmentDirections.actionNavigationLocationsToLocationDetailsFragment(
+                        item.name, item.locationType, item.dimension
+                    )
+                )
             }
         })
 
-        binding.locationsList.apply {
+        binding.list.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext())
             adapter = viewAdapter
         }
 
-        binding.locationsList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-
-                val lastVisiblePosition =
-                    (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
-                if (viewAdapter.itemCount - lastVisiblePosition < 30) {
-                    locationsViewModel.requestNextPage()
-                }
-            }
-        })
+        binding.list.setupPaging(viewAdapter, locationsViewModel)
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             locationsViewModel.refresh()
@@ -65,8 +61,9 @@ class LocationsFragment : FragmentBase<FragmentLocationsBinding>() {
             binding.swipeRefreshLayout.isRefreshing = it == ListState.Loading
         }
 
-        locationsViewModel.locations.observe(viewLifecycleOwner) {
+        locationsViewModel.items.observe(viewLifecycleOwner) {
             viewAdapter.setModel(it)
         }
     }
 }
+

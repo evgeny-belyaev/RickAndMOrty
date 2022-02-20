@@ -1,39 +1,26 @@
 package com.ugene.rickandmorty
 
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.LiveDataReactiveStreams
-import androidx.lifecycle.lifecycleScope
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.ugene.rickandmorty.api.ApiService
-import com.ugene.rickandmorty.api.ServiceFactory
 import com.ugene.rickandmorty.databinding.ActivityMainBinding
-import com.ugene.rickandmorty.di.IHeater
-import com.ugene.rickandmorty.ui.dashboard.DashboardViewModel
+import com.ugene.rickandmorty.ui.visibleOrGone
 import dagger.android.AndroidInjection
-import io.reactivex.BackpressureStrategy
-import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    @Inject
-    public lateinit var serviceFactory: ServiceFactory
-
-    @Inject
-    lateinit var heater: IHeater
-
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
+
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState)
 
@@ -47,11 +34,31 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
+                R.id.navigation_locations, R.id.navigation_characters, R.id.navigation_episodes
             )
         )
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            val ids = listOf(
+                R.id.navigation_locations,
+                R.id.navigation_characters,
+                R.id.navigation_episodes
+            )
+            val isTab = ids.contains(destination.id)
+            binding.navView.visibleOrGone(isTab)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
 

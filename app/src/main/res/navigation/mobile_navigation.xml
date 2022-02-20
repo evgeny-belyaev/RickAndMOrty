@@ -3,23 +3,85 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_locations">
 
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_locations"
         android:name="com.ugene.rickandmorty.ui.locations.LocationsFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_locations" />
+        android:label="@string/title_locations"
+        tools:layout="@layout/fragment_locations">
+        <action
+            android:id="@+id/action_navigation_locations_to_locationDetailsFragment"
+            app:destination="@id/locationDetailsFragment" />
+    </fragment>
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.ugene.rickandmorty.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_characters"
+        android:name="com.ugene.rickandmorty.ui.characters.CharactersFragment"
+        android:label="@string/title_characters"
+        tools:layout="@layout/fragment_characters" >
+        <action
+            android:id="@+id/action_navigation_characters_to_characterDetailsFragment"
+            app:destination="@id/characterDetailsFragment" />
+    </fragment>
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.ugene.rickandmorty.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_episodes"
+        android:name="com.ugene.rickandmorty.ui.episodes.EpisodesFragment"
+        android:label="@string/title_episodes"
+        tools:layout="@layout/fragment_location_details">
+        <action
+            android:id="@+id/action_navigation_episodes_to_episodesDetailsFragment"
+            app:destination="@id/episodesDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/locationDetailsFragment"
+        android:name="com.ugene.rickandmorty.ui.details.LocationDetailsFragment"
+        android:label="@string/title_location_details"
+        tools:layout="@layout/fragment_location_details">
+        <argument
+            android:name="name"
+            app:argType="string" />
+        <argument
+            android:name="type"
+            app:argType="string" />
+        <argument
+            android:name="dimension"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/episodesDetailsFragment"
+        android:name="com.ugene.rickandmorty.ui.details.EpisodesDetailsFragment"
+        android:label="@string/title_episode_details">
+        <argument
+            android:name="name"
+            app:argType="string" />
+        <argument
+            android:name="airDate"
+            app:argType="string" />
+        <argument
+            android:name="episode"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/characterDetailsFragment"
+        android:name="com.ugene.rickandmorty.ui.details.CharacterDetailsFragment"
+        android:label="CharacterDetailsFragment" >
+        <argument
+            android:name="name"
+            app:argType="string" />
+        <argument
+            android:name="species"
+            app:argType="string" />
+        <argument
+            android:name="status"
+            app:argType="string" />
+        <argument
+            android:name="gender"
+            app:argType="string" />
+        <argument
+            android:name="image"
+            app:argType="string" />
+    </fragment>
 </navigation>

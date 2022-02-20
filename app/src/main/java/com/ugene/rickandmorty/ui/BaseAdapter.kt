@@ -28,6 +28,7 @@ abstract class BaseAdapter<TItem : AdapterItemBase>(
         holder.bind(items[position], position, onItemClickListener)
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<TItem> =
         viewHolderFactoryMapping[viewType]!!.invoke(parent) as BaseViewHolder<TItem>
 
