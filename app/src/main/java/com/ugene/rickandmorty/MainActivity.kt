@@ -2,22 +2,22 @@ package com.ugene.rickandmorty
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.squareup.moshi.JsonReader
-import com.squareup.moshi.Moshi
-import com.ugene.rickandmorty.components.ApiService
-import com.ugene.rickandmorty.components.ApisEntity
-import com.ugene.rickandmorty.components.ApisEntityJsonAdapter
-import com.ugene.rickandmorty.components.ServiceFactory
-import com.ugene.rickandmorty.di.IHeater
+import com.ugene.rickandmorty.api.ApiService
+import com.ugene.rickandmorty.api.ServiceFactory
 import com.ugene.rickandmorty.databinding.ActivityMainBinding
+import com.ugene.rickandmorty.di.IHeater
 import com.ugene.rickandmorty.ui.dashboard.DashboardViewModel
 import dagger.android.AndroidInjection
+import io.reactivex.BackpressureStrategy
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -26,9 +26,6 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
-    @Inject
-    public lateinit var dashboardViewModel: DashboardViewModel
 
     @Inject
     public lateinit var serviceFactory: ServiceFactory
@@ -55,14 +52,6 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-        lifecycleScope.launchWhenResumed {
-            withContext(Dispatchers.IO) {
-                val service = serviceFactory.create<ApiService>()
-                val entity = service.getApis()
-                val b = entity.characters
-            }
-        }
     }
 }
 

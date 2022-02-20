@@ -1,4 +1,4 @@
-package com.ugene.rickandmorty.components
+package com.ugene.rickandmorty.api
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -9,3 +9,4 @@ data class ApisEntity(
     @field:Json(name = "locations") val locations: String?,
     @field:Json(name = "episodes") val episodes: String?
 )
+

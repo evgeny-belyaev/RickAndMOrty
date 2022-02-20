@@ -1,23 +1,33 @@
 package com.ugene.rickandmorty.ui.dashboard
 
+import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.ViewModel
-import com.ugene.rickandmorty.di.IComponent1
+import com.ugene.rickandmorty.api.ApiService
+import com.ugene.rickandmorty.api.ServiceFactory
+import io.reactivex.BackpressureStrategy
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.BehaviorSubject
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+class DashboardViewModel @Inject constructor(serviceFactory: ServiceFactory) :
+    ViewModel() {
 
-class DashboardViewModel @Inject constructor(private val component1: IComponent1) : ViewModel() {
+    private val subject = BehaviorSubject.createDefault(Unit)
 
-    private var i = 0
+    private val flowable =
+        subject
+            .observeOn(Schedulers.io())
+            .flatMap {
+                serviceFactory.create<ApiService>().getApis()
+            }
+            .replay(1).autoConnect()
+            .toFlowable(BackpressureStrategy.BUFFER)
 
-    init {
-        i++
+    val apis = LiveDataReactiveStreams.fromPublisher(flowable)
+
+    fun refresh() {
+        subject.onNext(Unit)
     }
 
-    fun getI(): Int {
-        return i;
-    }
-
-    fun m(): String {
-        return component1.method()
-    }
 }

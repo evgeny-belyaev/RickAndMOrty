@@ -1,6 +1,6 @@
 package com.ugene.rickandmorty.di
 
-import com.ugene.rickandmorty.components.ServiceFactory
+import com.ugene.rickandmorty.api.ServiceFactory
 import dagger.Module
 import dagger.Provides
 

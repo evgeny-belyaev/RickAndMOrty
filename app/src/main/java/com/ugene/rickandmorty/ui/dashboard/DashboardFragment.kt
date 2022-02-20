@@ -4,14 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.ugene.rickandmorty.databinding.FragmentDashboardBinding
 import com.ugene.rickandmorty.FragmentBase
+import com.ugene.rickandmorty.databinding.FragmentDashboardBinding
 import dagger.android.support.AndroidSupportInjection
-import javax.inject.Inject
 
 class DashboardFragment : FragmentBase<FragmentDashboardBinding>() {
-    @Inject
-    lateinit var dashboardViewModel: DashboardViewModel
+    private val dashboardViewModel by lazy {
+        getViewModel<DashboardViewModel>()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
@@ -26,7 +26,13 @@ class DashboardFragment : FragmentBase<FragmentDashboardBinding>() {
         setBinding(FragmentDashboardBinding.inflate(inflater, container, false))
         val root: View = binding.root
 
-        binding.textDashboard.text = dashboardViewModel.getI().toString()
+        binding.refresh.setOnClickListener {
+            dashboardViewModel.refresh()
+        }
+
+        dashboardViewModel.apis.observe(viewLifecycleOwner) {
+            binding.textDashboard.text = it.characters
+        }
 
         return root
     }

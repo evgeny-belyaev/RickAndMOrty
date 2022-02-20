@@ -3,6 +3,7 @@ package com.ugene.rickandmorty.di
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ugene.rickandmorty.ui.dashboard.DashboardViewModel
+import com.ugene.rickandmorty.ui.locations.LocationsViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -15,5 +16,10 @@ internal abstract class ViewModelModule {
     @Binds
     @IntoMap
     @ViewModelKey(DashboardViewModel::class)
-    protected abstract fun movieListViewModel(dashboardViewModel: DashboardViewModel): ViewModel
+    protected abstract fun dashboardViewModel(dashboardViewModel: DashboardViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LocationsViewModel::class)
+    protected abstract fun locationsViewModel(locationsViewModel: LocationsViewModel): ViewModel
 }

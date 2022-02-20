@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.ugene.rickandmorty.ui.home.HomeFragment"
+        android:name="com.ugene.rickandmorty.ui.locations.LocationsFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_locations" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
