@@ -67,7 +67,7 @@
     <fragment
         android:id="@+id/characterDetailsFragment"
         android:name="com.ugene.rickandmorty.ui.details.CharacterDetailsFragment"
-        android:label="CharacterDetailsFragment" >
+        android:label="@string/title_character_details" >
         <argument
             android:name="name"
             app:argType="string" />
